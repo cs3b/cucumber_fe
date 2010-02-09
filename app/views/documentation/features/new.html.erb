@@ -1,0 +1,20 @@
+<div class="actions_bar">
+  <%= link_to "Back", documentation_features_path %>
+  <%= link_to_function "Create", "$('#feature_new').submit();" %>
+</div>
+
+<h1>New feature<%= params[:scope].blank? ? '' : " with scope: #{params[:scope]}" %></h1>
+
+<% form_tag documentation_features_path, :id => 'feature_new' do %>
+
+    <%= hidden_field_tag :scope, params[:scope] %>
+
+    <h2>Feature name</h2>
+    <%= text_field_tag "feature_name", '', :size => "80x5" %>
+
+<% end %>
+
+<div class="actions_bar">
+  <%= link_to "Back", documentation_features_path %>
+  <%= link_to_function "Create", "$('#feature_new').submit();" %>
+</div>

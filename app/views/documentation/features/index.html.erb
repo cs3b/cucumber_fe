@@ -1,0 +1,35 @@
+
+<%= stylesheet_link_tag('jquery/ui/ui.accordion.css') %>
+<%= javascript('jquery/ui/ui.accordion.min.js') %>
+
+<div id="actions" style="width: 100%">
+  <% form_tag '', :method => :get do %>
+  <%= label_tag :scope, "Filter features by: " %>
+  <%= select_tag :scope, options_for_select(@scope_options, :selected => params[:scope]), :onchange => "this.form.submit();" %>
+  <% end %>
+  <br />
+  <% form_tag 'features/new', :method => :get do %>
+      <%= hidden_field_tag :scope, params[:scope] %>
+    <%= submit_tag "Add new feature in current scope" %>
+  <% end %>
+</div>
+
+<div id="accordion">
+
+ <% CucumberEditor.files.each do |file| %>
+  <h3><%= link_to file.title ,"#" %></h3>
+    <div style="height: auto;">
+      <h4><%= link_to "Edit", edit_documentation_feature_path(Base64.encode64(file.relative_path_for(@dir))) %></h4>
+      <pre>
+        <%= file.raw %>
+      </pre>
+    </div>
+<% end %>
+
+</div>
+
+<script>
+ jQuery(document).ready(function(){
+    $('#accordion').accordion({ autoHeight: false }); 
+    });
+</script>

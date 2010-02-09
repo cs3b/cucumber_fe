@@ -1,0 +1,50 @@
+<%= stylesheet_link_tag('jquery/ui/ui.accordion.css') %>
+
+<div class="actions_bar">
+  <%= link_to "Back", documentation_features_path %>
+  <%= link_to_function "Save", "$('#feature_edit').submit();" %>
+</div>
+
+<h1>Editing Feature: <%= @file.title %></h1>
+
+<% form_tag documentation_feature_path(params[:id]), :method => :put, :id => 'feature_edit' do %>
+
+    <h2>Feature</h2>
+    <%= text_area_tag "file[feature]", (@file.feature ? @file.feature.raw : "Feature: #{@file.title}"),
+                      :size => "80x5" %>
+
+    <% if @file.background %>
+        <h2>Background - <%= @file.background.title %></h2>
+        <%= text_area_tag "file[background]", @file.background.raw, :size => "80x8" %>
+    <% end %>
+
+    <h2>Scenarios</h2>
+    <div id="accordion">
+      <% if @file.scenarios %>
+      <% @file.scenarios.each_with_index do |scenario, index| %>
+          <h3><%= scenario.title %></h3>
+
+          <div>
+            <%= text_area_tag "file[scenarios][]", scenario.raw, :size => "80x15" %>
+          </div>
+      <% end %>
+          <% else %>
+            <h3><...></h3>
+
+          <div>
+            <%= text_area_tag "file[scenarios][]", "Scenario: <...>", :size => "80x15" %>
+          </div>
+      <% end %>
+    </div>
+<% end %>
+
+<%= javascript('jquery/ui/ui.accordion.min.js') %>
+<%= javascript('jquery/plugins/netchanger') %>
+<%= javascript('jquery/plugins/safetynet') %>
+
+<script>
+    jQuery(document).ready(function() {
+        $('#accordion').accordion({ autoHeight: false });
+        $.safetynet();
+    });
+</script>
