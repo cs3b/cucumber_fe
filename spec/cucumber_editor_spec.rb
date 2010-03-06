@@ -36,7 +36,7 @@ Feature: Read a review}
       end
       it "second" do
         @file.scenarios[1].raw.should == %Q{# 0.90
-  @pending
+  @pending @mc
   Scenario: I click the View All and I can see a list of all the reviews for that product.
     Given I should see "Read All User Reviews"}
       end
