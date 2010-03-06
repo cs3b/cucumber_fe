@@ -1,7 +1,7 @@
-Dir.glob("cucumber_editor/*.rb").each { |dir| require dir }
+require 'singleton'
 class CucumberEditor
   include Singleton
-  cattr_accessor :prefix, :files
+  @@prefix = ''
   @@files = []
 
   class << self
@@ -10,6 +10,18 @@ class CucumberEditor
       Dir.glob("#{prefix}/**/*.feature").collect { |full_path|
         files << File.new(full_path)
       }
+    end
+
+    def files
+      @@files
+    end
+
+    def prefix
+      @@prefix
+    end
+
+    def prefix=(prefix)
+      @@prefix = prefix
     end
 
     def count
@@ -140,49 +152,49 @@ class CucumberEditor
 
     def parse
       unless parsed
-        buffor = Buffor.new(self)
+        buffer = Buffer.new(self)
         raw.split("\n").each do |line|
 
           case line
             when /^(\s)*$/
-              case buffor.klass
+              case buffer.klass
                 when nil
                   # do nothing
                 else
-                  if buffor.flag
-                     buffor.push line
+                  if buffer.flag
+                     buffer.push line
                   else
-                    buffor.flush
+                    buffer.flush
                   end
               end
             when /^(\s)*Feature:.*/
-              buffor.push line
-              buffor.klass = Feature
+              buffer.push line
+              buffer.klass = Feature
             when /^(\s)*Scenario Outline:.*/
-              buffor.push line
-              buffor.klass = ScenarioOutline
-              buffor.flag = true
+              buffer.push line
+              buffer.klass = ScenarioOutline
+              buffer.flag = true
             when /^(\s)*Examples:.*/
-              buffor.push line
-              buffor.flag = false
+              buffer.push line
+              buffer.flag = false
             when /^(\s)*Scenario:.*/
-              buffor.push line
-              buffor.klass = Scenario
+              buffer.push line
+              buffer.klass = Scenario
             when /^(\s)*Background:.*/
-              buffor.push line
-              buffor.klass = Background
+              buffer.push line
+              buffer.klass = Background
             else
-              buffor.push line
+              buffer.push line
           end
         end
-        buffor.flush unless buffor.empty?
+        buffer.flush unless buffer.empty?
       end
       self.parsed = true
     end
   end
 
 
-  class Buffor < Struct.new(:file, :klass, :flag)
+  class Buffer < Struct.new(:file, :klass, :flag)
 
     def push(line)
       @lines ||= []
@@ -223,6 +235,7 @@ class CucumberEditor
     end
 
     def attach_to_file(file)
+      @file = file
       file.add_feature self
     end
   end
@@ -233,9 +246,27 @@ class CucumberEditor
       raw.scan(/^.*Scenario:.*/).first.gsub(/^.*Scenario:\s*/, '')
     end
 
+    def tags
+      scan_tags
+    end
+
     def attach_to_file(file)
+      @file = file
       file.add_scenario self
     end
+
+    private
+
+    def scan_tags
+      feature_and_scenario = (feature_raw + raw)
+      tags_lines = feature_and_scenario.scan(/^\s*@.*$/).join("\n")
+      tags_lines.scan(/@[^\s]+/).uniq
+    end
+
+    def feature_raw
+      @file.feature.raw
+    end
+
   end
 
   class ScenarioOutline < Scenario
@@ -251,6 +282,7 @@ class CucumberEditor
     end
 
     def attach_to_file(file)
+      @file = file
       file.add_background self
     end
   end
