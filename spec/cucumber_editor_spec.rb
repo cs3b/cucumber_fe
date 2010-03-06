@@ -59,5 +59,9 @@ Feature: Read a review}
       scenario = @file.scenarios[1]
       scenario.tags.should == %w(@m2a @mc @product_review @pending)
     end
+    it "should translate tags to css classes" do
+      scenario = @file.scenarios[1]
+      scenario.css_classes.should == %w(m2a mc product_review pending)
+    end
   end
 end

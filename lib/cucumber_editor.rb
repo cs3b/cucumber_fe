@@ -250,6 +250,10 @@ class CucumberEditor
       scan_tags
     end
 
+    def css_classes
+      tags.collect {|tag| tag.gsub(/@/, "")}
+    end
+
     def attach_to_file(file)
       @file = file
       file.add_scenario self
