@@ -8,10 +8,30 @@ describe Kanban do
     @kanban = Kanban.new(CucumberEditor.files)
   end
 
+  context "TAG GROUPING" do
+    {
+            # two or three small letters
+            :author => %w(@mc @ao @ak @tb @rj @rb @bk),
+            # m + number + optional letter
+            :milestone => %w(@m1 @m2 @m2a @m0),
+            # finite list of tags
+            :status => %w(@spec @todo @wip @done @q_a @accepted),
+            # everything else
+            :module => %w(@user @group @product_review )
+    }.each_pair do |group_name, tags|
+      tags.each do |tag|
+        it "should recognize tag #{tag} as #{group_name}" do
+          Kanban.tag_group(tag).should == group_name
+        end
+      end
+    end
+  end
+
   it "should have all tags detected" do
+    pending
     @kanban.tags(:all).should == %w( @added @3 @pending @mc @m2a @product_review )
   end
-  
+
   it "should return array of tags responsible for status" do
     pending
     @kanban.tags(:status).should == %w(@_spec @_todo @_done @_qa @_accepted)
