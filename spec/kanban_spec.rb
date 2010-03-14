@@ -11,11 +11,13 @@ describe Kanban do
   context "TAG GROUPING" do
     {
             # two or three small letters
-            :author => %w(@mc @ao @ak @tb @rj @rb @bk),
+            :developer => %w(@mc @ao @ak @tb @rj @rb @bk),
             # m + number + optional letter
             :milestone => %w(@m1 @m2 @m2a @m0),
-            # finite list of tags
-            :status => %w(@spec @todo @wip @done @q_a @accepted),
+            # status start from _ and have at least 2 alphanumeric characters
+            :status => %w(@_spec @_todo @_wip @_done @_qa @_accepted),
+            # single digit
+            :complexity => %w(@1 @3 @7),
             # everything else
             :module => %w(@user @group @product_review )
     }.each_pair do |group_name, tags|
@@ -29,24 +31,20 @@ describe Kanban do
 
   it "should have all tags detected" do
     @kanban.tags(:all).should ==
-            %w( @m2a @mc @tb @3 @1 @product_review @accepted @added @done @pending @q_a @javascript @wip ).sort
+            %w( @m2a @mc @tb @3 @1 @product_review @_accepted @added @_done @pending @_qa @javascript @_wip ).sort
   end
 
   it "should return array of tags responsible for status" do
-    pending
-    @kanban.tags(:status).should == %w(@_spec @_todo @_done @_qa @_accepted)
+    @kanban.tags(:status).should == %w(@_done @_qa @_accepted @_wip).sort
   end
   it "should return array of tags responsible for milestone" do
-    pending
-    @kanban.tags(:milestone).should == %w( ... )
+    @kanban.tags(:milestone).should == %w( @m2a )
   end
   it "should return array of tags responsible for user ownership" do
-    pending
-    @kanban.tags(:user).should == %w( ... )
+    @kanban.tags(:developer).should == %w( @mc @tb )
   end
   it "should return array of tags responsible for module" do
-    pending
-    @kanban.tags(:module).should == %w( ... )
+    @kanban.tags(:module).should == %w( @product_review @added @pending @javascript ).sort
   end
 
   ## powinien zglosic blad jesli ktorys scenariusz ma dwa tagi oznaczajace status i wlozyc scenariusz

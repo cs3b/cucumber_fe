@@ -10,7 +10,7 @@ class Kanban
       when :all
         @tags.values.flatten.sort
       else
-        []
+        @tags[type].sort
     end
   end
 
@@ -33,11 +33,13 @@ class Kanban
     def tag_group(tag)
       case tag
         when /@[a-z]{2}\z/
-          :author
+          :developer
         when /@m\d.{0,1}\z/
           :milestone
-        when /@(spec|todo|wip|done|q_a|accepted)\z/
+        when /@_[a-z\d]{2,}\z/
           :status
+        when /@\d/
+          :complexity
         else
           :module
       end
