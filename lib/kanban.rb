@@ -8,7 +8,7 @@ class Kanban
   def tags(type)
     case type
       when :all
-        @tags.values.flatten.uniq
+        @tags.values.flatten.sort
       else
         []
     end

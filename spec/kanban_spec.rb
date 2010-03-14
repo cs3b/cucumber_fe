@@ -3,7 +3,7 @@ require 'lib/kanban'
 
 describe Kanban do
   before(:all) do
-    CucumberEditor.prefix = 'features'
+    CucumberEditor.prefix = 'features_kanban'
     CucumberEditor.scan
     @kanban = Kanban.new(CucumberEditor.files)
   end
@@ -28,8 +28,8 @@ describe Kanban do
   end
 
   it "should have all tags detected" do
-    pending
-    @kanban.tags(:all).should == %w( @added @3 @pending @mc @m2a @product_review )
+    @kanban.tags(:all).should ==
+            %w( @m2a @mc @tb @3 @1 @product_review @accepted @added @done @pending @q_a @javascript @wip ).sort
   end
 
   it "should return array of tags responsible for status" do
