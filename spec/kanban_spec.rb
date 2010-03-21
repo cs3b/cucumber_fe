@@ -48,8 +48,9 @@ describe Kanban do
   end
 
   ## powinien zglosic blad jesli ktorys scenariusz ma dwa tagi oznaczajace status i wlozyc scenariusz
-  ## do wszystkich grup
+  ## do wszystkich grup !! not sure
 
+  # Do we really want skip some tags ?
   it "should have array of tags that should be skipped in filters" do
     pending
     @kanban.tags(:skip).should be_instance_of(Array)
