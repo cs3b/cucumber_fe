@@ -238,6 +238,16 @@ class CucumberEditor
       @file = file
       file.add_feature self
     end
+
+
+    def estimation
+      tag = tags.detect {|tag| tag =~ /@(1|3)/ }
+      tag ? tag.gsub('@','').to_i : nil
+    end
+
+    def tags
+      raw.scan(/^\s*@.*$/).first.scan(/@[^\s]+/)
+    end
   end
 
   class Scenario < Struct.new(:raw)
@@ -248,6 +258,11 @@ class CucumberEditor
 
     def tags
       scan_tags
+    end
+
+    def estimation
+      tag = tags.detect {|tag| tag =~ /@\d/ }
+      tag ? tag.gsub('@','').to_i : nil
     end
 
     def css_classes
@@ -261,6 +276,7 @@ class CucumberEditor
 
     private
 
+    #TODO delagate tags from feature to feature
     def scan_tags
       feature_and_scenario = (feature_raw + raw)
       tags_lines = feature_and_scenario.scan(/^\s*@.*$/).join("\n")

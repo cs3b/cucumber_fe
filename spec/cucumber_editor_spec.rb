@@ -34,11 +34,18 @@ Feature: Read a review}
     Then I should see "The most helpful review" within "#expert_review"
     And I should see product rating within "#expert_review"}
       end
+      it "estimation for first scenario should be 1" do
+        @file.scenarios.first.estimation.should == 1
+      end
       it "second" do
         @file.scenarios[1].raw.should == %Q{# 0.90
-  @pending @mc
+  @pending @mc @m2b
   Scenario: I click the View All and I can see a list of all the reviews for that product.
     Given I should see "Read All User Reviews"}
+      end
+
+      it "estimation for second scenario should be nil" do
+        @file.scenarios[1].estimation.should be_nil
       end
       it "last" do
         @file.scenarios.last.raw.should == %Q{# 0.90
@@ -46,6 +53,9 @@ Feature: Read a review}
   Scenario: I can read full user review
     When I follow "Read the full review >" within "#positiv_review"
     Then I should see "Very good product"}
+      end
+      it "estimation for last scenario should be 3" do
+        @file.scenarios.last.estimation.should == 3
       end
     end
   end
@@ -57,11 +67,11 @@ Feature: Read a review}
     end
     it "second scenario should have 4 tags" do
       scenario = @file.scenarios[1]
-      scenario.tags.should == %w(@m2a @mc @product_review @pending)
+      scenario.tags.should == %w(@m2a @mc @product_review @pending @m2b)
     end
     it "should translate tags to css classes" do
       scenario = @file.scenarios[1]
-      scenario.css_classes.should == %w(m2a mc product_review pending)
+      scenario.css_classes.should == %w(m2a mc product_review pending m2b)
     end
   end
 end

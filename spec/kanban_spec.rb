@@ -31,14 +31,14 @@ describe Kanban do
 
   it "should have all tags detected" do
     @kanban.tags(:all).should ==
-            %w( @m2a @mc @tb @3 @1 @product_review @_accepted @added @_done @pending @_qa @javascript @_wip ).sort
+            %w( @m2a @m2b @mc @tb @3 @1 @product_review @_accepted @added @_done @pending @_qa @javascript @_wip ).sort
   end
 
   it "should return array of tags responsible for status" do
     @kanban.tags(:status).should == %w(@_done @_qa @_accepted @_wip).sort
   end
   it "should return array of tags responsible for milestone" do
-    @kanban.tags(:milestone).should == %w( @m2a )
+    @kanban.tags(:milestone).should == %w( @m2a @m2b )
   end
   it "should return array of tags responsible for user ownership" do
     @kanban.tags(:developer).should == %w( @mc @tb )
