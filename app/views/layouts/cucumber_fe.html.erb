@@ -1,0 +1,25 @@
+<html>
+
+<head>
+  <%= stylesheet_link_tag('jquery/ui/jquery-ui.css') %>
+  <%= stylesheet_link_tag('jquery/ui/ui.accordion.css') %>
+  <%= javascript_include_tag 'jquery' %>
+  <%= javascript_include_tag 'jquery-ui' %>
+  <%= javascript_include_tag('jquery/ui/ui.accordion.min.js') %>
+  <%= javascript_include_tag('jquery/plugins/netchanger') %>
+  <%= javascript_include_tag('jquery/plugins/safetynet') %>
+</head>
+
+<body>
+<div id="content">
+  <% unless flash[:notice].nil? %>
+      <div class="notice"><%= flash[:notice] %></div>
+  <% end %>
+  <% unless flash[:error].nil? %>
+      <div class="error"><%= flash[:error] %></div>
+  <% end %>
+  <%= yield %>
+</div>
+</body>
+</html>
+

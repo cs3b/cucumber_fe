@@ -1,5 +1,5 @@
-class Documentation::FeaturesChangesController < ApplicationController
-
+class Documentation::FeaturesChangesController < Documentation::RootController
+  before_filter :digest_authenticate
   before_filter :set_dir
 
   def show

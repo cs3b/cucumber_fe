@@ -1,4 +1,3 @@
-<%= stylesheet_link_tag('jquery/ui/ui.accordion.css') %>
 
 <div class="actions_bar">
   <%= link_to "Back", documentation_features_path %>
@@ -22,25 +21,23 @@
     <div id="accordion">
       <% if @file.scenarios %>
       <% @file.scenarios.each_with_index do |scenario, index| %>
-          <h3><%= scenario.title %></h3>
+          <h3 style="padding-left: 35px;"><%= scenario.title %></h3>
 
-          <div>
-            <%= text_area_tag "file[scenarios][]", scenario.raw, :size => "80x15" %>
+          <div style="height: auto;">
+            <%= text_area_tag "file[scenarios][]", scenario.raw, :size => "80x8" %>
           </div>
       <% end %>
           <% else %>
             <h3><...></h3>
 
           <div>
-            <%= text_area_tag "file[scenarios][]", "Scenario: <...>", :size => "80x15" %>
+            <%= text_area_tag "file[scenarios][]", "Scenario: <...>", :size => "80x8" %>
           </div>
       <% end %>
     </div>
 <% end %>
 
-<%= javascript('jquery/ui/ui.accordion.min.js') %>
-<%= javascript('jquery/plugins/netchanger') %>
-<%= javascript('jquery/plugins/safetynet') %>
+
 
 <script>
     jQuery(document).ready(function() {

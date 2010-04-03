@@ -1,5 +1,5 @@
-class Documentation::FeaturesController < ApplicationController
-
+class Documentation::FeaturesController < Documentation::RootController
+  before_filter :digest_authenticate, :except => :show
   before_filter :set_scope, :dirs_to_select
 
   def index
@@ -39,7 +39,12 @@ class Documentation::FeaturesController < ApplicationController
   def update
     file_params = params[:file]
     file_params[:path] = path
-    file = CucumberEditor::File.update_or_create(file_params)
+    begin
+      CucumberEditor::File.update_or_create(file_params)
+      flash[:notice] = "File saved"
+    rescue
+      flash[:error] = "No changes detected"
+    end
     redirect_to edit_documentation_feature_path(params[:id])
   end
 
@@ -51,7 +56,7 @@ class Documentation::FeaturesController < ApplicationController
   end
 
   def dirs_to_select
-    permited_dirs = %w(_mc _step_definitions support . ..)
+    permited_dirs = %w(_step_definitions support . ..)
     @scope_options = [""] + Dir.entries(@dir) - permited_dirs
   end
 
@@ -63,7 +68,7 @@ class Documentation::FeaturesController < ApplicationController
     f_name.gsub!(/^.*Feature:\s*/, '')
     filename = f_name.downcase.gsub(/\s/, "_")+".feature"
     @path = @scope.join filename
-    if f_name.blank? or f_name.length < 5 
+    if f_name.blank? or f_name.length < 5
       false
     elsif File.exist? @path
       @file = CucumberEditor::File.new(@path)
