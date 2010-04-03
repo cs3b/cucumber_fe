@@ -2,18 +2,13 @@ require 'cucumber_editor'
 require 'worksheet'
 require 'document'
 
-class Feature < Struct.new(:path, :feature, :scenarios)
-end
-
-class Entity < Struct.new(:title)
-end
 
 describe Worksheet do
   before(:all) do
-    CucumberEditor.prefix = 'features'
+    CucumberEditor.prefix = 'features/cucumber_editor'
     CucumberEditor.scan
     @file1 = CucumberEditor.files.first
-    CucumberEditor.prefix = 'features_kanban'
+    CucumberEditor.prefix = 'features/kanban'
     CucumberEditor.scan
     @file2 = CucumberEditor.files.first
 

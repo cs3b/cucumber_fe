@@ -5,9 +5,9 @@ class Document
 
   DOC_ROW_LIMIT = 750
   
-  USER = 'michalczyz@gmail.com'
+  USER = ''
   PASSWD = ''
-  DOC_ID = 'tfKWzi9JctXtxcTP6cKBjEw'
+  DOC_ID = ''
 
   def new_worksheet(tags)
     timestamp = Time.now.strftime("%Y%m%d%H%M")

@@ -1,3 +1,18 @@
 = Cucumber Feature Editor
 
 /documentation/features
+
+
+= Changelog
+
+
+
+
+= Requirements
+
+* Ruby && RubyGems
+* gems:
+** google-spreadsheet-ruby
+* google spreadsheet document should have set localization to UK or USA
+*
+*

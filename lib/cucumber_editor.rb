@@ -8,7 +8,7 @@ class CucumberEditor
     def scan
       @@files = []
       Dir.glob("#{prefix}/**/*.feature").collect { |full_path|
-        files << File.new(full_path)
+        files << FeatureFile.new(full_path)
       }
     end
 
@@ -42,7 +42,7 @@ class CucumberEditor
     end
   end
 
-  class File < Struct.new(:path)
+  class FeatureFile < Struct.new(:path)
 
     attr_accessor :parsed
     @parsed = false

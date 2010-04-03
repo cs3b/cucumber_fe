@@ -13,7 +13,7 @@ class Documentation::FeaturesController < Documentation::RootController
 
   def create
     if file_params = parse_params(params[:feature_name])
-      @file = CucumberEditor::File.update_or_create(file_params)
+      @file = CucumberEditor::FeatureFile.update_or_create(file_params)
       redirect_to edit_documentation_feature_path(Base64.encode64(@file.relative_path_for(@dir)))
     elsif @file
       link = edit_documentation_feature_path(Base64.encode64(@file.relative_path_for(@dir)))
@@ -28,11 +28,11 @@ class Documentation::FeaturesController < Documentation::RootController
   end
 
   def edit
-    @file = CucumberEditor::File.new(path)
+    @file = CucumberEditor::FeatureFile.new(path)
   end
 
   def show
-    file = CucumberEditor::File.new(path)
+    file = CucumberEditor::FeatureFile.new(path)
     render :inline => "<pre>#{file.raw}</pre>"
   end
 
@@ -40,7 +40,7 @@ class Documentation::FeaturesController < Documentation::RootController
     file_params = params[:file]
     file_params[:path] = path
     begin
-      CucumberEditor::File.update_or_create(file_params)
+      CucumberEditor::FeatureFile.update_or_create(file_params)
       flash[:notice] = "File saved"
     rescue
       flash[:error] = "No changes detected"
@@ -71,7 +71,7 @@ class Documentation::FeaturesController < Documentation::RootController
     if f_name.blank? or f_name.length < 5
       false
     elsif File.exist? @path
-      @file = CucumberEditor::File.new(@path)
+      @file = CucumberEditor::FeatureFile.new(@path)
       false
     else
       file_params = {
