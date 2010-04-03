@@ -1,12 +1,32 @@
 = Cucumber Feature Editor
 
-/documentation/features
+to make more easy editing features with git autocomit && autopush function
 
+= Installation
 
-= Changelog
+ruby script/plugin install git://github.com/cs3b/cucumber_fe.git
 
+copy javascript && stylesheets files from public to stylesheets and javascripts folder
 
+= Use
 
+== url
+
+$HOST/documentation/features
+
+== git config
+
+cucumber_fe/lib/cucumber_editor.rb :31 :38
+
+== google spreadsheet config
+
+cucumber_fe/lib/document.rb
+
+  DOC_ROW_LIMIT = 750
+
+  USER = ''
+  PASSWD = ''
+  DOC_ID = ''
 
 = Requirements
 
