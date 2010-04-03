@@ -4,10 +4,12 @@ class Worksheet < Struct.new(:worksheet, :files, :tags)
     @row =1     
     write_header
     files.each do |file|
-      write_feature_info(file)
+      feature_starts
+      write_feature_info(file) if feature_pass_filter(file)
       file.scenarios.each do |scenario|
         write_scenario_info(scenario) if scenario_pass_filter(scenario)
       end
+      feature_ends
     end
   end
 
@@ -18,15 +20,27 @@ class Worksheet < Struct.new(:worksheet, :files, :tags)
     worksheet[1,2] = "scenario"
     worksheet[1,3] = "estimation"
     worksheet[1,4] = "tags"
-    @row+=1
+    worksheet[2,1] = "=COUNTA(A3:A#{Document::DOC_ROW_LIMIT})/2"
+    worksheet[2,2] = "=COUNTA(B3:B#{Document::DOC_ROW_LIMIT})"
+    worksheet[2,3] = "=SUM(C3:C#{Document::DOC_ROW_LIMIT})"
+    @row+=2
   end
 
   def write_feature_info(file)
     worksheet[@row,1] = file.feature.title
-    worksheet[@row+1,2] = file.path
+    #TODO remove dependency
+    worksheet[@row+1,1] = file.relative_path_for(CucumberEditor.prefix)
     worksheet[@row,3] = file.feature.estimation
     worksheet[@row,4] = file.feature.tags.join(",")
     @row +=2
+  end
+
+  def feature_starts
+    @row_feature_start = @row
+  end
+
+  def feature_ends
+    worksheet[@row_feature_start,5] = "=SUM(C#{@row_feature_start+1}:C#{@row-1})"
   end
 
   def write_scenario_info(scenario)
@@ -37,7 +51,10 @@ class Worksheet < Struct.new(:worksheet, :files, :tags)
   end
 
   def scenario_pass_filter(scenario)
-    # TODO support more tags
-    scenario.tags.include?( tags.first )
+    !tags.collect {|tag| scenario.tags.include?(tag) }.include?(false)
+  end
+
+  def feature_pass_filter(file)
+    !tags.collect {|tag| file.raw =~ %r{#{tag}} }.include?(nil)
   end
 end

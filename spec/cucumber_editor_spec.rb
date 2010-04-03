@@ -1,7 +1,7 @@
 require 'lib/cucumber_editor'
 describe CucumberEditor do
   before(:all) do
-    CucumberEditor.prefix = 'features'
+    CucumberEditor.prefix = 'features/cucumber_editor'
     CucumberEditor.scan
     @file = CucumberEditor.files.first
   end

@@ -27,6 +27,7 @@ class CucumberEditor
     def count
       files.size
     end
+
     #TODO config
     def pull
       `cd #{prefix} && git pull`
@@ -72,7 +73,8 @@ class CucumberEditor
 
     def scenarios
       parse
-      @scenarios
+      # TODO what if feature doesn't have scenarios
+      @scenarios || []
     end
 
     def background
@@ -144,7 +146,7 @@ class CucumberEditor
         @scenarios.map(&:raw).join("\n\n") << "\n"
       else
         "Scenario: <...>\n\n"
-        
+
       end
     end
 
@@ -162,7 +164,7 @@ class CucumberEditor
                   # do nothing
                 else
                   if buffer.flag
-                     buffer.push line
+                    buffer.push line
                   else
                     buffer.flush
                   end
@@ -206,7 +208,7 @@ class CucumberEditor
         object = klass.new(raw)
         object.attach_to_file(file)
       rescue => e
-        Rails.logger.warn %Q{ #{e} \n\n\n
+        print %Q{ #{e} \n\n\n
         File: #{file.inspect} \n Buffer:\n\n#{@lines.join('\n')}}
       end
       clear
@@ -241,12 +243,13 @@ class CucumberEditor
 
 
     def estimation
-      tag = tags.detect {|tag| tag =~ /@(1|3)/ }
-      tag ? tag.gsub('@','').to_i : nil
+      tag = tags.detect {|tag| tag =~ /@\d/ }
+      tag ? tag.gsub('@', '').to_f : nil
     end
 
     def tags
-      raw.scan(/^\s*@.*$/).first.scan(/@[^\s]+/)
+      tag_line = raw.scan(/^\s*@.*$/)
+      tag_line.first ? tag_line.first.scan(/@[^\s]+/) : []
     end
   end
 
@@ -257,12 +260,15 @@ class CucumberEditor
     end
 
     def tags
-      scan_tags
+      (feature.tags+scenario_tags).uniq
     end
 
     def estimation
+      #TODO fix this
+      tag_line = raw.scan(/^\s*@.*$/)
+      tags = tag_line.first ? tag_line.first.scan(/@[^\s]+/) : []
       tag = tags.detect {|tag| tag =~ /@\d/ }
-      tag ? tag.gsub('@','').to_i : nil
+      tag ? tag.gsub('@', '').to_f : nil
     end
 
     def css_classes
@@ -276,15 +282,17 @@ class CucumberEditor
 
     private
 
-    #TODO delagate tags from feature to feature
-    def scan_tags
-      feature_and_scenario = (feature_raw + raw)
-      tags_lines = feature_and_scenario.scan(/^\s*@.*$/).join("\n")
-      tags_lines.scan(/@[^\s]+/).uniq
+    def scenario_tags
+      tag_line = raw.scan(/^\s*@.*$/)
+      tag_line.first ? tag_line.first.scan(/@[^\s]+/) : []
     end
 
     def feature_raw
-      @file.feature.raw
+      feature.raw
+    end
+
+    def feature
+      @file.feature
     end
 
   end

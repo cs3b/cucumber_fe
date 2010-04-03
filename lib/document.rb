@@ -2,6 +2,8 @@ require 'rubygems'
 require 'google_spreadsheet'
 
 class Document
+
+  DOC_ROW_LIMIT = 750
   
   USER = 'michalczyz@gmail.com'
   PASSWD = ''
@@ -9,7 +11,7 @@ class Document
 
   def new_worksheet(tags)
     timestamp = Time.now.strftime("%Y%m%d%H%M")
-    @worksheet = document.add_worksheet("#{timestamp} - #{tags}", 200, 6)
+    @worksheet = document.add_worksheet("#{timestamp} - #{tags}", DOC_ROW_LIMIT, 6)
   end
 
   def save

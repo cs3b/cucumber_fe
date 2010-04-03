@@ -7,20 +7,20 @@ Feature: Read a review
 
 # 0.90
 
-  @1 @javascript @product_review @_wip
+  @1.25 @javascript @product_review @_wip
   Scenario: I can browse the most helpful reviews on the product page (with a View All... button under the list) with the most recent on top
     Then I should see "The most helpful review" within "#expert_review"
     And I should see product rating within "#expert_review"
 
 # 0.90
 
-  @pending @mc @_qa @3 @m2b
+  @pending @mc @_qa @3.5 @m2b
   Scenario: I click the View All and I can see a list of all the reviews for that product.
     Given I should see "Read All User Reviews"
 
 # 0.90
 
-  @added @3 @tb @_done
+  @added @3.5 @tb @_done
   Scenario: I can read full user review
     When I follow "Read the full review >" within "#positiv_review"
     Then I should see "Very good product"

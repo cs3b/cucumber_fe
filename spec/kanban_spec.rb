@@ -3,7 +3,7 @@ require 'lib/kanban'
 
 describe Kanban do
   before(:all) do
-    CucumberEditor.prefix = 'features_kanban'
+    CucumberEditor.prefix = 'features/kanban'
     CucumberEditor.scan
     @kanban = Kanban.new(CucumberEditor.files)
   end
@@ -17,7 +17,7 @@ describe Kanban do
             # status start from _ and have at least 2 alphanumeric characters
             :status => %w(@_spec @_todo @_wip @_done @_qa @_accepted),
             # single digit
-            :complexity => %w(@1 @3 @7),
+            :complexity => %w(@1.25 @3.5 @7),
             # everything else
             :module => %w(@user @group @product_review )
     }.each_pair do |group_name, tags|
@@ -31,7 +31,7 @@ describe Kanban do
 
   it "should have all tags detected" do
     @kanban.tags(:all).should ==
-            %w( @m2a @m2b @mc @tb @3 @1 @product_review @_accepted @added @_done @pending @_qa @javascript @_wip ).sort
+            %w( @m2a @m2b @mc @tb @3.5 @1.25 @product_review @_accepted @added @_done @pending @_qa @javascript @_wip ).sort
   end
 
   it "should return array of tags responsible for status" do
