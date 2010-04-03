@@ -28,23 +28,17 @@ class CucumberEditor
       files.size
     end
 
-    #TODO config
-    def pull
-      `cd #{prefix} && git pull`
-    end
-
-    def commit(msg)
-      msg = `cd #{prefix} && git add .`
-      msg << `cd #{prefix} && git commit -m "#{msg}"`
-      msg
+    def commit(file_path)
+      g = Git.open(Rails.root, :log => Logger.new(STDOUT))
+      g.add(file_path)
+      commit_msg = file_path.split("/").last.humanize
+      g.commit(commit_msg)
     end
 
     def push
-      `cd #{prefix} && git push origin next`
-    end
-
-    def changes
-      `cd #{prefix} && git diff origin/next .`
+      g = Git.open(Rails.root, :log => Logger.new(STDOUT))
+      branch_name = "stories_#{Rails.root.basename.to_s}"
+      g.push(g.remote('origin'), "deploy:#{branch_name}")
     end
   end
 
@@ -63,6 +57,8 @@ class CucumberEditor
         file.add_scenario Scenario.new(scenario)
       end if params[:scenarios]
       file.save
+      CucumberEditor.commit(file)
+      CucumberEditor.push
       file
     end
 
